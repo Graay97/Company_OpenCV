@@ -6,14 +6,11 @@ def handle_key_input(key, effect_type, bRec, outputVideo, output_frame):
         0: "Normal",
         1: "Cartoonify",
         2: "Pencil_Sketch",
-        3: "Vintage",
-        4: "Soft_Focus",
-        5: "Virtual Makeup",
-        6: "Caricature"
+        3: "Vintage"
     }
 
     # 효과 선택 처리
-    if ord('0') <= key <= ord('6'):
+    if ord('0') <= key <= ord('3'):
         effect_type = key - ord('0')
     
     # 스크린샷 저장

@@ -38,63 +38,6 @@ def vintage_filter(frame):
     frame = np.uint8(frame)
     return cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
 
-# Soft Focus 효과
-def soft_focus_filter(frame):
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    faces = detector(gray)
-    for face in faces:
-        landmarks = predictor(gray, face)
-        left_eye = (landmarks.part(36).x, landmarks.part(36).y)
-        right_eye = (landmarks.part(45).x, landmarks.part(45).y)
-        radius = 30
-        cv2.circle(frame, left_eye, radius, (0, 0, 0), 2)
-        cv2.circle(frame, right_eye, radius, (0, 0, 0), 2)
-        angle = np.arctan2(right_eye[1] - left_eye[1], right_eye[0] - left_eye[0])
-        left_boundary = (int(left_eye[0] + radius * np.cos(angle)), int(left_eye[1] + radius * np.sin(angle)))
-        right_boundary = (int(right_eye[0] - radius * np.cos(angle)), int(right_eye[1] - radius * np.sin(angle)))
-        cv2.line(frame, left_boundary, right_boundary, (0, 0, 0), 2)
-    return frame
-
-# Virtual Makeup 효과
-def virtual_makeup_filter(frame):
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    faces = detector(gray)
-    for face in faces:
-        landmarks = predictor(gray, face)
-        lip_top = (landmarks.part(48).x, landmarks.part(48).y)
-        lip_bottom = (landmarks.part(54).x, landmarks.part(54).y)
-        frame = cv2.line(frame, lip_top, lip_bottom, (0, 0, 255), 3)
-    return frame
-
-# Caricature 효과
-def Caricature_filter(frame):
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    faces = detector(gray)
-    
-    for face in faces:
-        landmarks = predictor(gray, face)
-        
-        # 랜드마크 좌표 추출 (예: 눈, 코, 입)
-        eye_left = (landmarks.part(36).x, landmarks.part(36).y)
-        eye_right = (landmarks.part(45).x, landmarks.part(45).y)
-        nose = (landmarks.part(30).x, landmarks.part(30).y)
-        mouth_left = (landmarks.part(48).x, landmarks.part(48).y)
-        mouth_right = (landmarks.part(54).x, landmarks.part(54).y)
-        
-        # 눈 간 거리 계산
-        eye_distance = np.linalg.norm(np.array(eye_left) - np.array(eye_right))
-        nose_distance = np.linalg.norm(np.array(eye_left) - np.array(nose))
-        
-        # 캐리커쳐 효과 (눈과 코를 확대하거나 축소)
-        scaling_factor = 1.2  # 크기 조정 비율
-        new_eye_distance = eye_distance * scaling_factor
-        new_nose_distance = nose_distance * scaling_factor
-        
-        # 랜드마크 위치 조정 (단순히 확대/축소하는 방식)
-        frame = exaggerate_features(frame, eye_left, eye_right, new_eye_distance, nose, new_nose_distance)
-    
-    return frame
-
 # 얼굴 특징 확대/축소 함수
 def exaggerate_features(frame, eye_left, eye_right, new_eye_distance, nose, new_nose_distance):
     # 눈 간 거리 확장
@@ -110,8 +53,5 @@ def exaggerate_features(frame, eye_left, eye_right, new_eye_distance, nose, new_
 filters = {
     1: cartoonify_filter,
     2: pencil_sketch_filter,
-    3: vintage_filter,
-    4: soft_focus_filter,
-    5: virtual_makeup_filter,
-    6: Caricature_filter
+    3: vintage_filter
 }

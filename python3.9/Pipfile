@@ -8,6 +8,8 @@ matplotlib = "*"
 dlib = "*"
 opencv-python = "==4.5.2.54"
 numpy = "<2"
+opencv-contrib-python = "==4.5.2.54"
+mediapipe = "*"
 
 [dev-packages]
 
