@@ -1,10 +1,17 @@
 # main.py
+
+# 필터 효과 상수 정의
+EFFECT_NORMAL = 0
+EFFECT_CARTOONIFY = 1
+EFFECT_PENCIL_SKETCH = 2
+EFFECT_VINTAGE = 3
+
 import cv2
 from filters import filters
 from key_handler import handle_key_input
 
 # 초기화
-effect_type = 0
+effect_type = EFFECT_NORMAL  # "Normal" 필터로 초기화
 bRec = False
 outputVideo = None
 
@@ -18,9 +25,18 @@ if not cap.isOpened():
     exit()
 
 # 필터 적용 함수
-def apply_filters(frame, effect_type):
-    frame = cv2.flip(frame, 1)
-    return filters.get(effect_type, lambda x: x)(frame)  # 필터 적용
+def apply_filters(frame, effect_type, flip=True):
+    """
+    주어진 프레임에 필터를 적용하고 선택적으로 좌우 반전을 처리합니다.
+
+    :param frame: 입력 이미지 프레임
+    :param effect_type: 적용할 필터의 유형
+    :param flip: 좌우 반전 여부 (기본값 True)
+    :return: 필터가 적용된 이미지 프레임
+    """
+    if flip:
+        frame = cv2.flip(frame, 1)  # 좌우 반전
+    return filters.get(effect_type, lambda x: x)(frame)
 
 # 실시간 프레임 처리
 while True:

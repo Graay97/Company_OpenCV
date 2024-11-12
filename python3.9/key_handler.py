@@ -1,18 +1,18 @@
-# key_handler.py
 import cv2
 
+# 효과 이름 상수 정의
 def handle_key_input(key, effect_type, bRec, outputVideo, output_frame):
     effect_name = {
-        0: "Normal",
-        1: "Cartoonify",
-        2: "Pencil_Sketch",
-        3: "Vintage"
+        EFFECT_NORMAL: "Normal",
+        EFFECT_CARTOONIFY: "Cartoonify",
+        EFFECT_PENCIL_SKETCH: "Pencil_Sketch",
+        EFFECT_VINTAGE: "Vintage"
     }
 
     # 효과 선택 처리
     if ord('0') <= key <= ord('3'):
         effect_type = key - ord('0')
-    
+
     # 스크린샷 저장
     elif key == ord('s'):
         filename = f"{effect_name.get(effect_type, 'Unknown')}_capture.jpg"
@@ -22,11 +22,14 @@ def handle_key_input(key, effect_type, bRec, outputVideo, output_frame):
     # 녹화 시작/중지
     elif key == ord('r'):
         if not bRec:
+            # 녹화 시작
             outputVideo = cv2.VideoWriter('Video.avi', cv2.VideoWriter_fourcc(*'DIVX'), 30.0, (1280, 720))
             bRec = True
             print("녹화 시작")
         else:
+            # 녹화 중지
             outputVideo.release()
+            outputVideo = None  # 녹화 종료 후 VideoWriter를 None으로 설정
             bRec = False
             print("녹화 중지")
     
