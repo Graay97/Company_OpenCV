@@ -1,0 +1,15 @@
+# constants.py
+
+EFFECT_NORMAL = 0
+EFFECT_CARTOONIFY = 1  
+EFFECT_PENCIL_SKETCH = 2
+EFFECT_VINTAGE = 3
+EFFECT_HEADBAND = 4
+
+EFFECT_NAMES = {
+    EFFECT_NORMAL: "Normal",
+    EFFECT_CARTOONIFY: "Cartoonify",
+    EFFECT_PENCIL_SKETCH: "Pencil Sketch",
+    EFFECT_VINTAGE: "Vintage",
+    EFFECT_HEADBAND: "Headband"
+}
