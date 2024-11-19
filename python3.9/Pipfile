@@ -5,11 +5,12 @@ name = "pypi"
 
 [packages]
 matplotlib = "*"
-dlib = "*"
 opencv-python = "==4.5.2.54"
 numpy = "<2"
 opencv-contrib-python = "==4.5.2.54"
 mediapipe = "*"
+dlib = "==19.24.6"
+pyyaml = "*"
 
 [dev-packages]
 

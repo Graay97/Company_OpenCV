@@ -5,8 +5,22 @@ from key_handler import handle_key_input
 from face_utils import initialize_face_detectors
 from constants import EFFECT_NORMAL, EFFECT_HEADBAND
 from headband import headband_filter
+from logger import Logger
 
-detector, predictor = initialize_face_detectors()
+logger = Logger.get_main_logger()
+
+logger.info("프로그램 시작")
+
+try:
+    logger.debug("얼굴 감지기 초기화 시도")
+    detector, predictor = initialize_face_detectors()
+    face_detection_enabled = True
+    logger.info("얼굴 감지기 초기화 성공")
+except Exception as e:
+    logger.error(f"얼굴 감지기 초기화 실패: {e}", exc_info=True)
+    detector, predictor = None, None
+    face_detection_enabled = False
+
 effect_type = EFFECT_NORMAL
 bRec = False
 outputVideo = None
@@ -20,22 +34,29 @@ if not cap.isOpened():
     exit()
 
 def apply_filters(frame, effect_type, flip=True):
-    if flip:
-        frame = cv2.flip(frame, 1)
-    
-    if effect_type == EFFECT_HEADBAND:
-        if predictor is None or detector is None:
+    try:
+        if flip:
+            frame = cv2.flip(frame, 1)
+        
+        if effect_type == EFFECT_HEADBAND:
+            if not face_detection_enabled:
+                logger.warning("얼굴 감지 기능을 사용할 수 없습니다")
+                return frame
+            
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            logger.debug("얼굴 감지 시도")
+            faces = detector(gray)
+            logger.debug(f"감지된 얼굴 수: {len(faces)}")
+            
+            if len(faces) > 0:
+                for face in faces:
+                    frame = headband_filter(frame, predictor, face, gray)
             return frame
-        
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        faces = detector(gray)
-        
-        if len(faces) > 0:
-            for face in faces:
-                frame = headband_filter(frame, predictor, face, gray)
-        return frame
 
-    return filters.get(effect_type, lambda x: x)(frame)
+        return filters.get(effect_type, lambda x: x)(frame)
+    except Exception as e:
+        logger.error(f"필터 적용 중 오류 발생: {e}", exc_info=True)
+        return frame
 
 
 while True:

@@ -6,12 +6,11 @@ import numpy as np
 
 # Dlib 얼굴 감지기 및 랜드마크 감지기 초기화 (메인 코드에서 초기화할 경우 함수 인자로 받아 사용)
 try:
-    predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
     detector = dlib.get_frontal_face_detector()
-except dlib.error:
-    print("얼굴 랜드마크 파일을 찾을 수 없습니다. 파일 경로를 확인하세요.")
-    predictor = None  # 대체값 설정
-    detector = None
+    predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
+except Exception as e:
+    print("얼굴 감지기 로드 실패:", str(e))
+    exit(1)
 
 # 머리띠 필터 적용
 def headband_filter(frame, predictor, rect, gray=None):
