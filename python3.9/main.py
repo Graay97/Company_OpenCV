@@ -4,6 +4,7 @@ from filters import filters
 from key_handler import handle_key_input
 from face_utils import initialize_face_detectors
 from constants import EFFECT_NORMAL, EFFECT_HEADBAND
+from headband import headband_filter
 
 detector, predictor = initialize_face_detectors()
 effect_type = EFFECT_NORMAL
@@ -25,10 +26,13 @@ def apply_filters(frame, effect_type, flip=True):
     if effect_type == EFFECT_HEADBAND:
         if predictor is None or detector is None:
             return frame
-        faces = detector(frame)
+        
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        faces = detector(gray)
+        
         if len(faces) > 0:
-            for face in faces:  # 모든 얼굴에 대해 필터 적용
-                frame = filters[EFFECT_HEADBAND](frame, predictor, face)
+            for face in faces:
+                frame = headband_filter(frame, predictor, face, gray)
         return frame
 
     return filters.get(effect_type, lambda x: x)(frame)
@@ -56,7 +60,10 @@ while True:
     if bRec and outputVideo is not None:
         outputVideo.write(output_frame)
 
+# 종료 전 정리 작업을 명시적으로 수행
+cv2.waitKey(1)  # 추가: 마지막 프레임 처리를 위한 대기
 cap.release()
 if outputVideo is not None:
     outputVideo.release()
 cv2.destroyAllWindows()
+cv2.waitKey(1)  # 추가: 모든 창이 제대로 닫힐 때까지 대기
