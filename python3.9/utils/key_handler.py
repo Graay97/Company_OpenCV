@@ -1,7 +1,8 @@
 # key_handler.py
+
 import cv2
 from dataclasses import dataclass
-from constants import EFFECT_NAMES
+from config import EFFECT_NAMES, VIDEO_CODEC, VIDEO_FPS, CAMERA_WIDTH, CAMERA_HEIGHT
 
 @dataclass
 class KeyInputResult:
@@ -19,7 +20,10 @@ def handle_key_input(key, effect_type, bRec, outputVideo, output_frame):
         print(f"이미지 캡처 완료: {filename}")
     elif key == ord('r'):
         if not bRec:
-            outputVideo = cv2.VideoWriter('Video.avi', cv2.VideoWriter_fourcc(*'DIVX'), 30.0, (1280, 720))
+            outputVideo = cv2.VideoWriter('Video.avi', 
+                                        cv2.VideoWriter_fourcc(*VIDEO_CODEC), 
+                                        VIDEO_FPS, 
+                                        (CAMERA_WIDTH, CAMERA_HEIGHT))
             bRec = True
             print("녹화 시작")
         else:

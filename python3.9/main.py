@@ -1,13 +1,19 @@
 # main.py
 import cv2
 from filters import filters
-from key_handler import handle_key_input
-from face_utils import initialize_face_detectors
-from constants import EFFECT_NORMAL, EFFECT_HEADBAND
-from headband import headband_filter
-from logger import Logger
+from filters.headband import headband_filter
+from utils import handle_key_input
+from utils import initialize_face_detectors
+from config import (
+    EFFECT_NORMAL, EFFECT_HEADBAND,
+    CAMERA_WIDTH, CAMERA_HEIGHT,
+    VIDEO_FPS, VIDEO_CODEC
+)
+from utils.logger import MainLogger, FaceLogger
+from exceptions import CameraInitError, CameraReadError, FilterApplyError
 
-logger = Logger.get_main_logger()
+logger = MainLogger.get_logger()
+face_logger = FaceLogger.get_logger()
 
 logger.info("프로그램 시작")
 
@@ -17,7 +23,7 @@ try:
     face_detection_enabled = True
     logger.info("얼굴 감지기 초기화 성공")
 except Exception as e:
-    logger.error(f"얼굴 감지기 초기화 실패: {e}", exc_info=True)
+    logger.error(f"얼굴 감지기 초기화 실패: {e}")
     detector, predictor = None, None
     face_detection_enabled = False
 
@@ -25,13 +31,17 @@ effect_type = EFFECT_NORMAL
 bRec = False
 outputVideo = None
 
-cap = cv2.VideoCapture(0)
-cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
-cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
-
-if not cap.isOpened():
-    print("카메라 초기화 실패")
-    exit()
+# 카메라 초기화
+try:
+    cap = cv2.VideoCapture(0)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
+    
+    if not cap.isOpened():
+        raise CameraInitError()
+except Exception as e:
+    logger.error(f"카메라 초기화 실패: {str(e)}")
+    exit(1)
 
 def apply_filters(frame, effect_type, flip=True):
     try:
@@ -60,13 +70,23 @@ def apply_filters(frame, effect_type, flip=True):
 
 
 while True:
-    ret, frame = cap.read()
-    if not ret:
-        print("프레임 읽기 실패")
+    try:
+        ret, frame = cap.read()
+        if not ret:
+            raise CameraReadError()
+            
+        output_frame = apply_filters(frame, effect_type)
+        cv2.imshow("실시간 필터 적용", output_frame)
+        
+    except CameraReadError as e:
+        logger.error(f"프레임 읽기 실패: {str(e)}")
         break
-
-    output_frame = apply_filters(frame, effect_type)
-    cv2.imshow("실시간 필터 적용", output_frame)
+    except FilterApplyError as e:
+        logger.error(f"필터 적용 실패: {str(e)}")
+        continue
+    except Exception as e:
+        logger.error(f"예상치 못한 오류 발생: {str(e)}")
+        break
 
     key = cv2.waitKey(1) & 0xFF
     if key != 255:

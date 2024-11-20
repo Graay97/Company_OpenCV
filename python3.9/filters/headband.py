@@ -1,19 +1,22 @@
 # headband.py
 
 import cv2
-import dlib
 import numpy as np
+from .base import register_filter
+from config import EFFECT_HEADBAND
 
-# Dlib 얼굴 감지기 및 랜드마크 감지기 초기화 (메인 코드에서 초기화할 경우 함수 인자로 받아 사용)
-try:
-    detector = dlib.get_frontal_face_detector()
-    predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
-except Exception as e:
-    print("얼굴 감지기 로드 실패:", str(e))
-    exit(1)
-
-# 머리띠 필터 적용
 def headband_filter(frame, predictor, rect, gray=None):
+    """머리띠 필터를 적용하는 함수
+    
+    Args:
+        frame: 원본 이미지
+        predictor: dlib 얼굴 랜드마크 predictor
+        rect: 감지된 얼굴 영역
+        gray: 회색조 이미지 (선택적)
+    
+    Returns:
+        필터가 적용된 이미지
+    """
     if gray is None:
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     

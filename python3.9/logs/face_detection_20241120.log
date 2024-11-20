@@ -1,0 +1,63 @@
+2024-11-20 09:17:05,234 - face_detection - INFO - 얼굴 감지기 초기화 시작
+2024-11-20 09:17:05,234 - face_detection - DEBUG - 프론트 페이스 디텍터 초기화 시도
+2024-11-20 09:17:05,576 - face_detection - INFO - 프론트 페이스 디텍터 초기화 성공
+2024-11-20 09:17:05,577 - face_detection - ERROR - 랜드마크 파일을 찾을 수 없습니다: shape_predictor_68_face_landmarks.dat
+NoneType: None
+2024-11-20 09:17:05,578 - face_detection - ERROR - 얼굴 감지기 초기화 중 오류 발생: 랜드마크 파일을 찾을 수 없습니다: shape_predictor_68_face_landmarks.dat
+Traceback (most recent call last):
+  File "C:\Users\User\Desktop\Develop\python\python3.9\utils\face_utils.py", line 19, in initialize_face_detectors
+    raise FileNotFoundError(f"랜드마크 파일을 찾을 수 없습니다: {landmark_model_path}")
+FileNotFoundError: 랜드마크 파일을 찾을 수 없습니다: shape_predictor_68_face_landmarks.dat
+2024-11-20 09:20:27,712 - face_detection - INFO - 얼굴 감지기 초기화 시작
+2024-11-20 09:20:27,712 - face_detection - DEBUG - 프론트 페이스 디텍터 초기화 시도
+2024-11-20 09:20:28,068 - face_detection - INFO - 프론트 페이스 디텍터 초기화 성공
+2024-11-20 09:20:28,068 - face_detection - ERROR - 랜드마크 파일을 찾을 수 없습니다: shape_predictor_68_face_landmarks.dat
+NoneType: None
+2024-11-20 09:20:28,069 - face_detection - ERROR - 얼굴 감지기 초기화 중 오류 발생: 랜드마크 파일을 찾을 수 없습니다: shape_predictor_68_face_landmarks.dat
+Traceback (most recent call last):
+  File "C:\Users\User\Desktop\Develop\python\python3.9\utils\face_utils.py", line 19, in initialize_face_detectors
+    raise FileNotFoundError(f"랜드마크 파일을 찾을 수 없습니다: {landmark_model_path}")
+FileNotFoundError: 랜드마크 파일을 찾을 수 없습니다: shape_predictor_68_face_landmarks.dat
+2024-11-20 09:26:14,283 - face_detection - INFO - 얼굴 감지기 초기화 시작
+2024-11-20 09:26:14,283 - face_detection - DEBUG - 프론트 페이스 디텍터 초기화 시도
+2024-11-20 09:26:14,539 - face_detection - INFO - 프론트 페이스 디텍터 초기화 성공
+2024-11-20 09:26:14,540 - face_detection - ERROR - 랜드마크 파일을 찾을 수 없습니다: shape_predictor_68_face_landmarks.dat
+NoneType: None
+2024-11-20 09:26:14,541 - face_detection - ERROR - 얼굴 감지기 초기화 중 오류 발생: 랜드마크 파일을 찾을 수 없습니다: shape_predictor_68_face_landmarks.dat
+Traceback (most recent call last):
+  File "C:\Users\User\Desktop\Develop\python\python3.9\utils\face_utils.py", line 19, in initialize_face_detectors
+    raise FileNotFoundError(f"랜드마크 파일을 찾을 수 없습니다: {landmark_model_path}")
+FileNotFoundError: 랜드마크 파일을 찾을 수 없습니다: shape_predictor_68_face_landmarks.dat
+2024-11-20 09:27:16,077 - face_detection - INFO - 얼굴 감지기 초기화 시작
+2024-11-20 09:27:16,077 - face_detection - DEBUG - 프론트 페이스 디텍터 초기화 시도
+2024-11-20 09:27:16,329 - face_detection - INFO - 프론트 페이스 디텍터 초기화 성공
+2024-11-20 09:27:16,329 - face_detection - DEBUG - 랜드마크 파일 절대 경로: C:\Users\User\Desktop\Develop\python\python3.9\shape_predictor_68_face_landmarks.dat
+2024-11-20 09:27:16,330 - face_detection - DEBUG - 파일 존재 여부: False
+2024-11-20 09:27:16,330 - face_detection - ERROR - 랜드마크 파일을 찾을 수 없습니다: C:\Users\User\Desktop\Develop\python\python3.9\shape_predictor_68_face_landmarks.dat
+NoneType: None
+2024-11-20 09:27:16,331 - face_detection - ERROR - 얼굴 감지기 초기화 중 오류 발생: 랜드마크 파일을 찾을 수 없습니다: C:\Users\User\Desktop\Develop\python\python3.9\shape_predictor_68_face_landmarks.dat
+Traceback (most recent call last):
+  File "C:\Users\User\Desktop\Develop\python\python3.9\utils\face_utils.py", line 25, in initialize_face_detectors
+    raise FileNotFoundError(f"랜드마크 파일을 찾을 수 없습니다: {abs_model_path}")
+FileNotFoundError: 랜드마크 파일을 찾을 수 없습니다: C:\Users\User\Desktop\Develop\python\python3.9\shape_predictor_68_face_landmarks.dat
+2024-11-20 09:28:25,898 - face_detection - INFO - 얼굴 감지기 초기화 시작
+2024-11-20 09:28:25,898 - face_detection - DEBUG - 프론트 페이스 디텍터 초기화 시도
+2024-11-20 09:28:26,152 - face_detection - INFO - 프론트 페이스 디텍터 초기화 성공
+2024-11-20 09:28:26,152 - face_detection - DEBUG - 랜드마크 파일 절대 경로: C:\Users\User\Desktop\Develop\python\python3.9\shape_predictor_68_face_landmarks.dat
+2024-11-20 09:28:26,153 - face_detection - DEBUG - 파일 존재 여부: True
+2024-11-20 09:28:26,153 - face_detection - DEBUG - 랜드마크 예측기 로드 시도
+2024-11-20 09:28:27,205 - face_detection - INFO - 랜드마크 예측기 로드 성공
+2024-11-20 17:47:40,646 - face_detection - INFO - 얼굴 감지기 초기화 시작
+2024-11-20 17:47:40,647 - face_detection - DEBUG - 프론트 페이스 디텍터 초기화 시도
+2024-11-20 17:47:40,892 - face_detection - INFO - 프론트 페이스 디텍터 초기화 성공
+2024-11-20 17:47:40,892 - face_detection - DEBUG - 랜드마크 파일 절대 경로: C:\Users\User\Desktop\Develop\python\python3.9\shape_predictor_68_face_landmarks.dat
+2024-11-20 17:47:40,892 - face_detection - DEBUG - 파일 존재 여부: True
+2024-11-20 17:47:40,892 - face_detection - DEBUG - 랜드마크 예측기 로드 시도
+2024-11-20 17:47:41,887 - face_detection - INFO - 랜드마크 예측기 로드 성공
+2024-11-20 18:05:50,194 - face_detection - INFO - 얼굴 감지기 초기화 시작
+2024-11-20 18:05:50,195 - face_detection - DEBUG - 프론트 페이스 디텍터 초기화 시도
+2024-11-20 18:05:50,434 - face_detection - INFO - 프론트 페이스 디텍터 초기화 성공
+2024-11-20 18:05:50,435 - face_detection - DEBUG - 랜드마크 파일 절대 경로: C:\Users\User\Desktop\Develop\python\python3.9\shape_predictor_68_face_landmarks.dat
+2024-11-20 18:05:50,435 - face_detection - DEBUG - 파일 존재 여부: True
+2024-11-20 18:05:50,435 - face_detection - DEBUG - 랜드마크 예측기 로드 시도
+2024-11-20 18:05:51,394 - face_detection - INFO - 랜드마크 예측기 로드 성공
