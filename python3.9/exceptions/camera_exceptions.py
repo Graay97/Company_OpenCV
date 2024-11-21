@@ -14,3 +14,7 @@ class CameraReadError(CameraError):
     def __init__(self, message="프레임 읽기 실패"):
         self.message = message
         super().__init__(self.message)
+
+class FilterApplyError(Exception):
+    """필터 적용 중 오류가 발생했을 때 발생하는 예외"""
+    pass

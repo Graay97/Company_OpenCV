@@ -13,8 +13,13 @@ python3.9/
 │   ├── cartoonify.py
 │   ├── headband.py
 │   ├── pencil_sketch.py
+│   ├── three_d_effect.py
 │   └── vintage.py
 ├── logs/
+├── resources/
+│   ├── headband_picture
+│   ├── screenshots
+│   └── videos
 ├── utils/
 │   ├── logger/
 │   │   ├── __init__.py

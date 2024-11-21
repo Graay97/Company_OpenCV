@@ -61,3 +61,10 @@ FileNotFoundError: 랜드마크 파일을 찾을 수 없습니다: C:\Users\User
 2024-11-20 18:05:50,435 - face_detection - DEBUG - 파일 존재 여부: True
 2024-11-20 18:05:50,435 - face_detection - DEBUG - 랜드마크 예측기 로드 시도
 2024-11-20 18:05:51,394 - face_detection - INFO - 랜드마크 예측기 로드 성공
+2024-11-20 18:17:42,467 - face_detection - INFO - 얼굴 감지기 초기화 시작
+2024-11-20 18:17:42,468 - face_detection - DEBUG - 프론트 페이스 디텍터 초기화 시도
+2024-11-20 18:17:42,708 - face_detection - INFO - 프론트 페이스 디텍터 초기화 성공
+2024-11-20 18:17:42,708 - face_detection - DEBUG - 랜드마크 파일 절대 경로: C:\Users\User\Desktop\Develop\python\python3.9\shape_predictor_68_face_landmarks.dat
+2024-11-20 18:17:42,709 - face_detection - DEBUG - 파일 존재 여부: True
+2024-11-20 18:17:42,709 - face_detection - DEBUG - 랜드마크 예측기 로드 시도
+2024-11-20 18:17:43,674 - face_detection - INFO - 랜드마크 예측기 로드 성공

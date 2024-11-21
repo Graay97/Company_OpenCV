@@ -3,7 +3,8 @@
 import cv2
 import numpy as np
 from .base import register_filter
-from config import EFFECT_HEADBAND
+from config import EFFECT_HEADBAND, RESOURCES_DIR
+import os
 
 def headband_filter(frame, predictor, rect, gray=None):
     """머리띠 필터를 적용하는 함수
@@ -29,9 +30,10 @@ def headband_filter(frame, predictor, rect, gray=None):
     eye_distance = right_eye[0] - left_eye[0]
     
     try:
-        headband_img = cv2.imread('mickey_500.png', -1)
+        headband_path = os.path.join(RESOURCES_DIR, 'headband_picture', 'mickey_500.png')
+        headband_img = cv2.imread(headband_path, -1)
         if headband_img is None:
-            raise FileNotFoundError("머리띠 이미지 파일(mickey.png)을 찾을 수 없습니다.")
+            raise FileNotFoundError(f"머리띠 이미지 파일({headband_path})을 찾을 수 없습니다.")
     except FileNotFoundError as e:
         print(e)
         return frame

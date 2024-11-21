@@ -5,11 +5,20 @@ EFFECT_CARTOONIFY = 1
 EFFECT_PENCIL_SKETCH = 2
 EFFECT_VINTAGE = 3
 EFFECT_HEADBAND = 4
+EFFECT_THREE_D = 5
 
 EFFECT_NAMES = {
     EFFECT_NORMAL: "Normal",
     EFFECT_CARTOONIFY: "Cartoonify",
     EFFECT_PENCIL_SKETCH: "Pencil Sketch",
     EFFECT_VINTAGE: "Vintage",
-    EFFECT_HEADBAND: "Headband"
+    EFFECT_HEADBAND: "Headband",
+    EFFECT_THREE_D: "3D Effect"
 }
+
+import cv2
+
+# 컬러 맵 상수 추가
+COLORMAP_JET = cv2.COLORMAP_JET
+COLORMAP_HOT = cv2.COLORMAP_HOT
+# 필요한 다른 컬러 맵도 추가 가능
