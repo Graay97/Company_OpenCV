@@ -4,16 +4,17 @@ import threading
 from dataclasses import dataclass
 from filters import filters
 from filters.headband import headband_filter
-from filters.three_d_effect import three_d_effect_filter
 from utils import handle_key_input, initialize_face_detectors
 from config import (
-    EFFECT_NORMAL, EFFECT_HEADBAND,
+    EFFECT_NORMAL, EFFECT_HEADBAND, EFFECT_CARTOONIFY,
+    EFFECT_VINTAGE, EFFECT_BEAUTY,
     CAMERA_WIDTH, CAMERA_HEIGHT,
     VIDEO_FPS, VIDEO_CODEC,
     SCREENSHOTS_DIR, VIDEOS_DIR
 )
 from utils.logger import MainLogger, FaceLogger
 from exceptions.camera_exceptions import CameraInitError, CameraReadError, FilterApplyError
+import dlib
 
 # 로깅 설정
 logger = MainLogger.get_logger()
@@ -50,6 +51,57 @@ except Exception as e:
     logger.error(f"카메라 초기화 실패: {str(e)}")
     exit(1)
 
+@dataclass
+class FaceDetectionCache:
+    frame_count: int = 0
+    last_faces = None
+    last_gray = None
+    SKIP_FRAMES = 2  # 몇 프레임마다 얼굴 감지를 할지 설정
+
+# 역 변수로 캐시 객체 생성
+face_cache = FaceDetectionCache()
+
+# 필터 이름 딕셔너리 수정
+FILTER_NAMES = {
+    EFFECT_NORMAL: u"기본 화면",
+    EFFECT_CARTOONIFY: u"카툰 필터",
+    EFFECT_VINTAGE: u"빈티지 필터",
+    EFFECT_HEADBAND: u"머리띠 필터",
+    EFFECT_BEAUTY: u"뷰티 필터",
+}
+
+def add_filter_name(frame, effect_type):
+    """프레임에 현재 필터 이름을 추가하는 함수"""
+    filter_name = FILTER_NAMES.get(effect_type, u"알 수 없는 필터")
+    
+    # OpenCV에서 한글 표시를 위한 설정
+    from PIL import Image, ImageDraw, ImageFont
+    import numpy as np
+    
+    # PIL 이미지로 변환
+    pil_img = Image.fromarray(frame)
+    draw = ImageDraw.Draw(pil_img)
+    
+    # 폰트 설정 (시스템에 설치된 한글 폰트 경로 지정)
+    try:
+        font = ImageFont.truetype("malgun.ttf", 20)  # Windows의 경우
+    except:
+        try:
+            font = ImageFont.truetype("/usr/share/fonts/truetype/nanum/NanumGothic.ttf", 20)  # Linux의 경우
+        except:
+            return frame  # 폰트를 찾을 수 없는 경우 원본 프레임 반환
+    
+    # 텍스트 그리기
+    text = f"현재 필터: {filter_name}"
+    draw.text((20, 20), text, font=font, fill=(255, 255, 255))
+    
+    # 키 가이드 추가
+    guide_text = u"0: 기본 / 1: 카툰 / 2: 빈티지 / 3: 머리띠 / 4: 뷰티 / Q: 종료"
+    draw.text((20, frame.shape[0] - 40), guide_text, font=font, fill=(255, 255, 255))
+    
+    # numpy 배열로 다시 변환
+    return np.array(pil_img)
+
 def apply_filters(frame, effect_type, flip=True):
     """
     선택된 효과를 프레임에 적용하는 함수
@@ -73,26 +125,43 @@ def apply_filters(frame, effect_type, flip=True):
                 logger.warning("얼굴 감지 기능을 사용할 수 없습니다")
                 return frame
             
-            # 회색조 변환
-            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            logger.debug("얼굴 감지 시도")
-            faces = detector(gray)
-            logger.debug(f"감지된 얼굴 수: {len(faces)}")
+            # 프레임 크기 축소
+            scale = 0.5
+            small_frame = cv2.resize(frame, (0, 0), fx=scale, fy=scale)
+            gray = cv2.cvtColor(small_frame, cv2.COLOR_BGR2GRAY)
             
-            # 감지된 각 얼굴에 헤드밴드 필터 적용
-            if len(faces) > 0:
+            # 캐시된 얼굴 위치 사용
+            if face_cache.frame_count % face_cache.SKIP_FRAMES == 0:
+                logger.debug("얼굴 감지 시도")
+                faces = detector(gray)
+                face_cache.last_faces = faces
+                face_cache.last_gray = gray
+            else:
+                faces = face_cache.last_faces
+                gray = face_cache.last_gray
+            
+            face_cache.frame_count += 1
+            
+            if faces and len(faces) > 0:
                 for face in faces:
-                    frame = headband_filter(frame, predictor, face, gray)
+                    # 축소된 이미지에서의 얼굴 위치를 원본 크기로 조정
+                    scaled_face = scale_rect(face, 1/scale)
+                    frame = headband_filter(frame, predictor, scaled_face, cv2.resize(gray, (frame.shape[1], frame.shape[0])))
             return frame
 
         # 기타 효과 적용
         return filters.get(effect_type, lambda x: x)(frame)
-    except UnboundLocalError as e:
-        logger.error(f"UnboundLocalError 발생: {e}", exc_info=True)
-        return frame
     except Exception as e:
         logger.error(f"필터 적용 중 오류 발생: {e}", exc_info=True)
         return frame
+
+def scale_rect(rect, scale):
+    """dlib의 rectangle 객체의 크기를 조정하는 헬퍼 함수"""
+    new_left = int(rect.left() * scale)
+    new_top = int(rect.top() * scale)
+    new_right = int(rect.right() * scale)
+    new_bottom = int(rect.bottom() * scale)
+    return dlib.rectangle(new_left, new_top, new_right, new_bottom)
 
 def process_frame(frame, effect_type, result_container):
     """
@@ -103,7 +172,10 @@ def process_frame(frame, effect_type, result_container):
         effect_type (int): 적용할 효과의 타입
         result_container (dict): 결과 프레임을 저장할 컨테이너
     """
-    result_container['output_frame'] = apply_filters(frame, effect_type)
+    filtered_frame = apply_filters(frame, effect_type)
+    # 필터 이름 추가
+    filtered_frame = add_filter_name(filtered_frame, effect_type)
+    result_container['output_frame'] = filtered_frame
 
 while True:
     try:

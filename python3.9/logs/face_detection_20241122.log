@@ -1,0 +1,14 @@
+2024-11-22 09:14:13,835 - face_detection - INFO - 얼굴 감지기 초기화 시작
+2024-11-22 09:14:13,835 - face_detection - DEBUG - 프론트 페이스 디텍터 초기화 시도
+2024-11-22 09:14:14,078 - face_detection - INFO - 프론트 페이스 디텍터 초기화 성공
+2024-11-22 09:14:14,078 - face_detection - DEBUG - 랜드마크 파일 절대 경로: C:\Users\User\Desktop\Develop\python\python3.9\shape_predictor_68_face_landmarks.dat
+2024-11-22 09:14:14,079 - face_detection - DEBUG - 파일 존재 여부: True
+2024-11-22 09:14:14,079 - face_detection - DEBUG - 랜드마크 예측기 로드 시도
+2024-11-22 09:14:15,079 - face_detection - INFO - 랜드마크 예측기 로드 성공
+2024-11-22 11:51:54,188 - face_detection - INFO - 얼굴 감지기 초기화 시작
+2024-11-22 11:51:54,188 - face_detection - DEBUG - 프론트 페이스 디텍터 초기화 시도
+2024-11-22 11:51:54,467 - face_detection - INFO - 프론트 페이스 디텍터 초기화 성공
+2024-11-22 11:51:54,467 - face_detection - DEBUG - 랜드마크 파일 절대 경로: C:\Users\User\Desktop\Develop\python\python3.9\shape_predictor_68_face_landmarks.dat
+2024-11-22 11:51:54,467 - face_detection - DEBUG - 파일 존재 여부: True
+2024-11-22 11:51:54,467 - face_detection - DEBUG - 랜드마크 예측기 로드 시도
+2024-11-22 11:51:55,465 - face_detection - INFO - 랜드마크 예측기 로드 성공
