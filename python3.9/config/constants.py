@@ -11,7 +11,7 @@ EFFECT_NAMES = {
     EFFECT_CARTOONIFY: "Cartoonify",
     EFFECT_VINTAGE: "Vintage",
     EFFECT_HEADBAND: "Headband",
-    EFFECT_BEAUTY: "Beauty"
+    EFFECT_BEAUTY: "Beauty",
 }
 
 import cv2

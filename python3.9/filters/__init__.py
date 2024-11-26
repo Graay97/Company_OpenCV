@@ -5,4 +5,4 @@ from .headband import headband_filter
 from .beauty import beauty_filter
 
 __all__ = ['filters', 'register_filter', 'cartoonify_filter', 
-           'vintage_filter', 'headband_filter', 'beauty_filter']
+           'vintage_filter', 'headband_filter', 'beauty_filter', 'film_filter']
