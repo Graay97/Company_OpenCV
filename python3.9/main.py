@@ -15,6 +15,8 @@ from config import (
 from utils.logger import MainLogger, FaceLogger
 from exceptions.camera_exceptions import CameraInitError, CameraReadError, FilterApplyError
 import dlib
+import platform
+from concurrent.futures import ThreadPoolExecutor
 
 # 로깅 설정
 logger = MainLogger.get_logger()
@@ -40,13 +42,33 @@ outputVideo = None           # VideoWriter 객체 초기화
 
 # 카메라 초기화
 try:
-    cap = cv2.VideoCapture(0)  # 첫 번째 카메라 장치 사용
+    # 백엔드 선택 최적화
+    if platform.system() == 'Windows':
+        cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+    else:
+        cap = cv2.VideoCapture(0, cv2.CAP_V4L2)
+    
+    # 필수 설정만 먼저 적용
+    cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
+    
+    # 빠른 초기화를 위한 설정
+    cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))  # MJPG 포맷 사용
+    cap.set(cv2.CAP_PROP_FPS, 30)  # 기본 FPS
+    
+    # 불필요한 자동 설정 비활성화
+    cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.25)  # 자동 노출 비활성화
+    cap.set(cv2.CAP_PROP_AUTOFOCUS, 0)  # 자동 초점 비활성화
+    
+    # 빠른 워밍업
+    for _ in range(3):  # 5회에서 3회로 감소
+        cap.grab()
     
     if not cap.isOpened():
         raise CameraInitError()
     logger.info("카메라 초기화 성공")
+
 except Exception as e:
     logger.error(f"카메라 초기화 실패: {str(e)}")
     exit(1)
@@ -164,25 +186,24 @@ def scale_rect(rect, scale):
     return dlib.rectangle(new_left, new_top, new_right, new_bottom)
 
 def process_frame(frame, effect_type, result_container):
-    """
-    스레드에서 프레임 처리하는 함수
+    """스레드에서 프레임 처리하는 함수"""
+    try:
+        filtered_frame = apply_filters(frame, effect_type)
+        filtered_frame = add_filter_name(filtered_frame, effect_type)
+        result_container['output_frame'] = filtered_frame
+    except Exception as e:
+        logger.error(f"프레임 처리 실패: {str(e)}")
+        result_container['output_frame'] = frame
 
-    Args:
-        frame (numpy.ndarray): 입력 프레임
-        effect_type (int): 적용할 효과의 타입
-        result_container (dict): 결과 프레임을 저장할 컨테이너
-    """
-    filtered_frame = apply_filters(frame, effect_type)
-    # 필터 이름 추가
-    filtered_frame = add_filter_name(filtered_frame, effect_type)
-    result_container['output_frame'] = filtered_frame
+# 프레임 처리를 위한 스레드 풀 생성
+thread_pool = ThreadPoolExecutor(max_workers=2)
 
 while True:
     try:
-        # 프레임 캡처
-        ret, frame = cap.read()
-        if not ret:
+        # 프레임 캡처 최적화
+        if not cap.grab():  # 먼저 프레임을 가져오고
             raise CameraReadError()
+        ret, frame = cap.retrieve()  # 필요할 때 디코딩
         
         # 필터 적용을 위한 스레드 시작
         result_container = {}
