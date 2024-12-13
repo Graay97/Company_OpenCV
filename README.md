@@ -59,16 +59,69 @@ python main.py
 - 프레임 드롭 발생 시: 시스템 리소스 확인
 
 ## 📂 프로젝트 구조
+
+<details>
+<summary>전체 파일 구조 보기</summary>
+
+```
 project-root/
 ├── main.py                 # 메인 실행 파일
 ├── filters.py             # 필터 함수 모음
 ├── key_handler.py        # 키보드 입력 처리
-├── config/
-│   └── settings.py       # 설정 파일
-├── resources/
-│   ├── screenshots/      # 스크린샷 저장 폴더
-│   └── videos/          # 녹화 영상 저장 폴더
-├── utils/
-│   ├── logger/          # 로깅 관련 모듈
-│   └── face_utils.py    # 얼굴 인식 유틸리티
-└── logs/                # 로그 파일 저장 폴더
+│
+├── config/               # 설정 관련 파일들
+│   ├── settings.py      # 기본 설정
+│   └── constants.py     # 상수 정의
+│
+├── resources/           # 리소스 파일들
+│   ├── screenshots/     # 스크린샷 저장 폴더
+│   └── videos/         # 녹화 영상 저장 폴더
+│
+├── utils/              # 유틸리티 모듈
+│   ├── logger/
+│   │   ├── __init__.py
+│   │   ├── base_logger.py
+│   │   ├── main_logger.py
+│   │   └── face_logger.py
+│   └── face_utils.py   # 얼굴 인식 관련 유틸리티
+│
+└── logs/              # 로그 파일들
+    ├── application_YYYYMMDD.log
+    └── face_detection_YYYYMMDD.log
+```
+
+</details>
+
+<details>
+<summary>주요 파일 설명</summary>
+
+### 핵심 파일
+- `main.py`: 프로그램의 진입점
+  - 실시간 비디오 스트림 처리
+  - 필터 적용 로직
+  - 키보드 이벤트 처리
+
+- `filters.py`: 이미지 필터 구현
+  - 카툰 효과
+  - 빈티지 효과
+  - 머리띠 필터
+  - 뷰티 필터
+
+- `key_handler.py`: 키보드 입력 처리
+  - 필터 전환
+  - 스크린샷 저장
+  - 녹화 시작/종료
+
+### 설정 파일
+- `config/settings.py`: 프로그램 설정
+  - 카메라 해상도
+  - 저장 경로
+  - 필터 파라미터
+
+### 유틸리티
+- `utils/logger/`: 로깅 시스템
+  - 애플리케이션 로그
+  - 얼굴 인식 로그
+  - 디버그 정보
+
+</details>
