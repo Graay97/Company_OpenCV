@@ -23,7 +23,9 @@
 
 ### 패키지 설치
 pip install opencv-python opencv-python-headless numpy pillow
+
 cmake -> https://cmake.org/download/
+
 Visual Studio 2022 -> https://visualstudio.microsoft.com/ko/downloads/
 pip install dlib 
 
