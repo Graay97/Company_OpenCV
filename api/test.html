@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>실시간 필터 카메라</title>
+    <!-- Google Fonts - Dongle 폰트 추가 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dongle&display=swap" rel="stylesheet">
+    <style>
+        /* 전체 페이지 스타일 */
+        body {
+            font-family: 'Dongle', sans-serif;  /* Dongle 폰트 적용 */
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+            font-size: 20px;  /* Dongle 폰트에 맞게 기본 폰트 크기 조정 */
+        }
+
+        /* 제목 스타일 */
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 48px;  /* 제목 폰트 크기 조정 */
+        }
+
+        /* 필터 설명 영역의 제목 */
+        h3 {
+            font-size: 32px;  /* 부제목 폰트 크기 조정 */
+            margin-bottom: 10px;
+        }
+
+        /* 드롭다운 메뉴 스타일 */
+        select {
+            padding: 8px 15px;
+            font-size: 24px;  /* 선택 메뉴 폰트 크기 조정 */
+            font-family: 'Dongle', sans-serif;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: white;
+        }
+
+        /* 버튼 공통 스타일 */
+        button {
+            padding: 8px 20px;
+            font-size: 24px;  /* 버튼 폰트 크기 조정 */
+            font-family: 'Dongle', sans-serif;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        /* 상태 표시 텍스트 스타일 */
+        .status {
+            text-align: center;
+            margin-top: 10px;
+            color: #666;
+            font-size: 24px;  /* 상태 텍스트 폰트 크기 조정 */
+        }
+
+        /* 필터 설명 리스트 스타일 */
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        /* 필터 설명 리스트 항목 스타일 */
+        li {
+            margin-bottom: 10px;
+        }
+
+        /* 필터 설명 리스트 항목 강조 스타일 */
+        li strong {
+            font-weight: bold;
+        }
+
+        /* 메인 컨테이너 스타일 */
+        .container {
+            max-width: 800px;  /* 최대 너비 설정 */
+            margin: 0 auto;    /* 중앙 정렬 */
+            background-color: gray;
+            padding: 20px;
+            border-radius: 10px;  /* 모서리 둥글게 */
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);  /* 그림자 효과 */
+        }
+
+        /* 컨트롤 버튼 영역 스타일 */
+        .controls {
+            display: flex;
+            gap: 10px;  /* 요소 간 간격 */
+            margin-bottom: 20px;
+            justify-content: center;  /* 가운데 정렬 */
+            align-items: center;
+        }
+
+        /* 이미지 컨테이너 스타일 */
+        .image-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        /* 필터된 이미지 스타일 */
+        #filteredImage {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        /* 버튼 호버 효과 */
+        button:hover {
+            opacity: 0.9;
+        }
+
+        /* 시작 버튼 스타일 */
+        .start-btn {
+            background-color: #4CAF50;  /* 초록색 */
+            color: white;
+        }
+
+        /* 정지 버튼 스타일 */
+        .stop-btn {
+            background-color: #f44336;  /* 빨간색 */
+            color: white;
+        }
+
+        /* 필터 설명 영역 스타일 */
+        .filter-info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>실시간 필터 카메라</h1>
+        <!-- 컨트롤 영역: 필터 선택 및 시작/정지 버튼 -->
+        <div class="controls">
+            <select id="filterType">
+                <option value="0">기본 화면</option>
+                <option value="1">카툰 필터</option>
+                <option value="2">빈티지 필터</option>
+                <option value="3">머리띠 필터</option>
+                <option value="4">뷰티 필터</option>
+            </select>
+            <button class="start-btn" onclick="startStream()">시작</button>
+            <button class="stop-btn" onclick="stopStream()">정지</button>
+        </div>
+        <!-- 필터된 이미지를 표시할 영역 -->
+        <div class="image-container">
+            <img id="filteredImage" alt="필터된 이미지">
+        </div>
+        <!-- 현재 상태를 표시할 영역 -->
+        <div class="status" id="status">상태: 대기 중</div>
+        <!-- ���터 설명 영역 -->
+        <div class="filter-info">
+            <h3>필터 설명:</h3>
+            <ul>
+                <li><strong>기본 화면:</strong> 필터가 적용되지 않은 원본 화면</li>
+                <li><strong>카툰 필터:</strong> 만화같은 효과를 적용합니다</li>
+                <li><strong>빈티지 필터:</strong> 옛날 사진 느낌의 효과를 적용합니다</li>
+                <li><strong>머리띠 필터:</strong> 귀여운 머리띠를 씌워줍니다</li>
+                <li><strong>뷰티 필터:</strong> 피부를 보정해주는 효과를 적용합니다</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // 전역 변수 선언
+        let streamActive = false;  // 스트리밍 상태
+        let streamInterval;        // 스트리밍 인터벌 ID
+        const statusElement = document.getElementById('status');
+
+        // 상태 메시지 업데이트 함수
+        function updateStatus(message) {
+            statusElement.textContent = '상태: ' + message;
+        }
+
+        // 필터된 이미지를 가져오는 함수
+        function getFilteredImage() {
+            const filterType = document.getElementById('filterType').value;
+            const filterNames = ['기본 화면', '카툰 필터', '빈티지 필터', '머리띠 필터', '뷰티 필터'];
+            
+            // API 호출
+            fetch(`http://localhost:8000/frame/${filterType}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.image) {
+                        // base64 이미지 데이터를 이미지 요소에 설정
+                        document.getElementById('filteredImage').src = 
+                            'data:image/jpeg;base64,' + data.image;
+                        updateStatus(`스트리밍 중 - ${filterNames[filterType]}`);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    updateStatus('오류 발생!');
+                });
+        }
+
+        // 스트리밍 시작 함수
+        function startStream() {
+            if (!streamActive) {
+                streamActive = true;
+                streamInterval = setInterval(getFilteredImage, 100);  // 10fps로 설정
+                updateStatus('스트리밍 시작');
+            }
+        }
+
+        // 스트리밍 정지 함수
+        function stopStream() {
+            streamActive = false;
+            if (streamInterval) {
+                clearInterval(streamInterval);
+                updateStatus('스트리밍 정지');
+            }
+        }
+
+        // 페��지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', () => {
+            updateStatus('대기 중');
+        });
+    </script>
+</body>
+</html>
