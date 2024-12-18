@@ -22,7 +22,13 @@
 - 웹캠
 
 ### 패키지 설치
-pip install opencv-python opencv-python-headless dlib numpy pillow
+pip install opencv-python opencv-python-headless numpy pillow
+
+cmake -> https://cmake.org/download/
+
+Visual Studio 2022 -> https://visualstudio.microsoft.com/ko/downloads/
+
+pip install dlib 
 
 ### 얼굴 인식 모델 설치
 1. [shape_predictor_68_face_landmarks.dat](다운로드_링크) 다운로드
